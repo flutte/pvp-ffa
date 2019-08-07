@@ -2,13 +2,14 @@
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 
---Import pause mode scripts
-AddCSLuaFile("pvp_disable/cl_do_pvp_pause.lua")
-include("pvp_disable/sv_do_pvp_pause.lua")
+--Import other stuff
+--AddCSLuaFile("rewards/cl_reward.lua")
+local plyer = FindMetaTable("Player")
+include("rewards/sv_reward.lua")
 --networking
 util.AddNetworkString("PointsGive")
 util.AddNetworkString("PointsTake")
-local plyer = FindMetaTable("Player")
+local getpoints = 0
 --Overwrite what happens when the player spawns
 function GM:PlayerInitialSpawn(ply)
 
@@ -50,8 +51,7 @@ function GiveAmmoReward( ply )
 	ply:GiveAmmo( 200, "SMG1", true )
 
 end
-
---What to do when the player gets a kill?
+--What to do when a player gets a kill?
 function GetAKill( ply )
 
 	ply:SetHealth( "100" )
@@ -73,7 +73,7 @@ function TakePoint(points, ply, attacker)
 	net.Send( ply )
 end
 --Get number of points
-function plyer:PointsGet( )
+function PointsGet(ply)
 	net.Start("PointsGet")
 	net.Send(ply)
 end
@@ -94,9 +94,4 @@ function GM:PlayerDeath( victim, inflictor, attacker )
 		GivePoint( points, attacker, victim ) -- give points to the attacker, depending on the weapon
 		TakePoint( 1, victim, attacker )
 	end
-end
-
-function GM:PlayerSpawn( ply )
-	GetAKill(ply)
-	GiveDefWeapons(ply)
 end
