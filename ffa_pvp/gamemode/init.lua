@@ -3,12 +3,15 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 
 --Import other stuff
---AddCSLuaFile("rewards/cl_reward.lua")
+AddCSLuaFile("rewards/cl_reward.lua")
 local plyer = FindMetaTable("Player")
 include("rewards/sv_reward.lua")
 --networking
 util.AddNetworkString("PointsGive")
 util.AddNetworkString("PointsTake")
+util.AddNetworkString("PointsGet")
+util.AddNetworkString("GetLevel")
+util.AddNetworkString("ReturnLevel")
 local getpoints = 0
 --Overwrite what happens when the player spawns
 function GM:PlayerInitialSpawn(ply)
@@ -32,6 +35,10 @@ function PlayerSetDefModel( ply )
 	ply:SetModel( "models/player/kleiner.mdl" )
 	ply:SetColor( Color( 255, 0, 0, 255) )
 
+end
+--Set player's chosen model (leveling reward)
+function ChangeModel(ply,model)
+	ply:SetModel( model )
 end
 
 --Give all default weapons
@@ -77,6 +84,15 @@ function PointsGet(ply)
 	net.Start("PointsGet")
 	net.Send(ply)
 end
+net.Receive("ReturnLevel",function()
+	getpoints = net.ReadInt(16)
+end)
+
+function GM:PlayerSpawn( ply ) 
+	GiveDefWeapons(ply)
+	GiveAmmoReward(ply)
+end
+
 
 --What to do when a player dies?
 function GM:PlayerDeath( victim, inflictor, attacker )
@@ -88,6 +104,8 @@ function GM:PlayerDeath( victim, inflictor, attacker )
 			points = 3
 		elseif (attacker:GetActiveWeapon():GetClass() == "weapon_357") then --If the weapon that killed the player is .357, give specific amount of points to the attacker.
 			points = 4
+		elseif (attacker:GetActiveWeapon():GetClass() == "weapon_smg1") then
+			points = 1
 		end
 		PrintMessage( HUD_PRINTTALK, victim:Name() .. "(-1) was killed by " .. attacker:Name() .."(+"..points..")." ) --Print chat
 		GetAKill( attacker ) -- run GetAKill function on the attacker
