@@ -14,4 +14,4 @@ You can use those points to level up and get goodies such as models, colo(u)r an
 
 ## Notes
 
-This gamemode is currently a work in progress. Bugs are to be expected.
+This gamemode is currently a work in progress. Bugs are to be expected
