@@ -1,3 +1,6 @@
+# This is no longer mantained.
+This project is discontinued and no longer mantained. There are several bugs/errors that aren't fixed, and don't expect them to be fixed. If you actually want to play this game then you will have to face the problem of refactoring the code to work properly.
+
 # pvp-ffa - A (WIP) Garry's Mod gamemode based around PvP.
 
 ## Installation
